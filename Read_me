@@ -1,1 +1,6 @@
-안녕친구들아 열심히 해아아아아아에에에에에
+#include<iostream>
+using namespace std;
+int main(){
+cout<<"se1x";
+
+}
