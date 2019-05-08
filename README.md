@@ -7,6 +7,8 @@ There are several things different from the original paper
 - Training dataset (orignal: ImageNet, this repository: [2])
 - Model (original: RED30 [3], this repository: SRResNet [4] or UNet [5])
 
+## Developers
+이윤호, 이재우, 전종혁, 채현욱
 
 ## Dependencies
 - Keras >= 2.1.2, TensorFlow, NumPy, OpenCV
