@@ -7,28 +7,11 @@ There are several things different from the original paper
 - Training dataset (orignal: ImageNet, this repository: [2])
 - Model (original: RED30 [3], this repository: SRResNet [4] or UNet [5])
 
-Updates:
-- [Sep. 21, 2018] Random-valued impulse noise model and L0 loss were added
-- [Aug. 25, 2018] UNet model can be used in training
-- [Aug. 25, 2018] Add trained weights
 
 ## Dependencies
 - Keras >= 2.1.2, TensorFlow, NumPy, OpenCV
 
 ## Train Noise2Noise
-
-### Download Dataset
-
-```bash
-mkdir dataset
-cd dataset
-wget https://cv.snu.ac.kr/research/VDSR/train_data.zip
-wget https://cv.snu.ac.kr/research/VDSR/test_data.zip
-unzip train_data.zip
-unzip test_data.zip
-cd ..
-```
-
 Any dataset can be used in training and validation instead of the above dataset.
 
 ### Train Model
@@ -98,30 +81,6 @@ python3 noise_model.py --noise_model text,0,95
 ```bash
 python3 plot_history.py --input1 gaussian --input2 clean
 ```
-
-##### Gaussian noise
-<img src="result/val_loss.png" width="480px">
-
-
-<img src="result/val_PSNR.png" width="480px">
-
-From the above result, I confirm that we can train denoising model using noisy targets
-but it is not comparable to the model trained using clean targets.
-If UNet is used, the result becomes 29.67 (noisy targets) vs. 30.14 (clean targets).
-
-##### Text insertion
-<img src="result/val_loss_text.png" width="480px">
-
-
-<img src="result/val_PSNR_text.png" width="480px">
-
-#### Random-valued impulse noise
-<img src="result/val_loss_impulse.png" width="480px">
-
-
-<img src="result/val_PSNR_impulse.png" width="480px">
-
-
 #### Check denoising result
 
 ```bash
@@ -147,54 +106,6 @@ optional arguments:
 ```
 This script adds noise using `test_noise_model` to each image in `image_dir` and performs denoising.
 If you want to perform denoising to already noisy images, use `--test_noise_model clean`.
-
-##### Gaussian noise
-Denoising result by clean target model (left to right: original, degraded image, denoised image):
-
-<img src="result/baby_GT_clean.png" width="800px">
-
-Denoising result by noise target model:
-
-<img src="result/baby_GT_gaussian.png" width="800px">
-
-##### Text insertion
-Denoising result by clean target model
-
-<img src="result/baby_GT_text_clean.png" width="800px">
-
-Denoising result by noise target model:
-
-<img src="result/baby_GT_text_noise.png" width="800px">
-
-##### Random-valued impulse noise
-Denoising result by clean target model
-
-<img src="result/baby_GT_impulse_clean.png" width="800px">
-
-Denoising result by noise target model:
-
-<img src="result/baby_GT_impulse_noise.png" width="800px">
-
-
-#### Trained weights
-
-[Gaussian noise, noise target](https://github.com/yu4u/noise2noise/releases/download/v0.1/weights.040-87.447-29.13496_gauss_noise.hdf5)
-
-[Gaussian noise, clean target](https://github.com/yu4u/noise2noise/releases/download/v0.1/weights.056-66.803-30.57923_gauss_clean.hdf5)
-
-[Text insertion, noise target](https://github.com/yu4u/noise2noise/releases/download/v0.1/weights.057-4.796-27.68533_text_noise.hdf5)
-
-[Text insertion, clean target](https://github.com/yu4u/noise2noise/releases/download/v0.1/weights.056-4.172-28.07752_text_clean.hdf5)
-
-[Random-valued impulse noise, noise target](https://github.com/yu4u/noise2noise/releases/download/v0.1/weights.047-2.317-24.30238_impulse_noise.hdf5)
-
-[Random-valued impulse noise, clean target](https://github.com/yu4u/noise2noise/releases/download/v0.1/weights.038-4.547-24.81654_impulse_clean.hdf5)
-
-### TODOs
-
-- [x] Compare (noise, clean) training and (noise, noise) training
-- [x] Add different noise models
-- [x] Write readme
 
 ## References
 
