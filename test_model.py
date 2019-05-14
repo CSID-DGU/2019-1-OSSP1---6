@@ -4,6 +4,11 @@ from pathlib import Path
 import cv2
 from model import get_model
 from noise_model import get_noise_model
+from imageai.Detection import ObjectDetection
+import os
+
+
+
 
 
 def get_args():
@@ -45,21 +50,38 @@ def main():
     for image_path in image_paths:
         image = cv2.imread(str(image_path))
         h, w, _ = image.shape
-        image = image[:(h // 16) * 16, :(w // 16) * 16]  # for stride (maximum 16)
+        image = image[:(h // 16) * 16, :(w // 16) * 16]  # for stride (maximum 16file:///C:/Users/user/Desktop/Project%231/P1/list4_4.py)
         h, w, _ = image.shape
 
         out_image = np.zeros((h, w * 3, 3), dtype=np.uint8)
         noise_image = val_noise_model(image)
         pred = model.predict(np.expand_dims(noise_image, 0))
         denoised_image = get_image(pred[0])
+ 
+        execution_path = os.getcwd()
         out_image[:, :w] = image
         out_image[:, w:w * 2] = noise_image
         out_image[:, w * 2:] = denoised_image
-
+        cv2.imwrite("denoised.jpg", out_image)
+        #img = cv2.imread(execution_path, "denoised.jpg")
+        
         if args.output_dir:
-            cv2.imwrite(str(output_dir.joinpath(image_path.name))[:-4] + ".png", out_image)
+            cv2.imwrite("denoised.png", out_image)
         else:
-            cv2.imshow("result", out_image)
+            #cv2.imshow("result", out_image)
+
+            detector = ObjectDetection()
+            detector.setModelTypeAsRetinaNet()
+            detector.setModelPath( os.path.join(execution_path , "resnet50_coco_best_v2.0.1.h5"))
+            detector.loadModel()
+            detections = detector.detectObjectsFromImage(input_image=os.path.join(execution_path , "denoised.jpg"), output_image_path=os.path.join(execution_path , "imagenew.jpg"))
+
+            for eachObject in detections:
+                print(eachObject["name"] , " : " , eachObject["percentage_probability"] )
+            
+            img = cv2.imread(execution_path, cv2.IMREAD_COLOR)
+            cv2.imshow("result", img)
+            
             key = cv2.waitKey(-1)
             # "q": quit
             if key == 113:
