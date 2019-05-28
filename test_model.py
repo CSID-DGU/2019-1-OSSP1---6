@@ -62,7 +62,8 @@ def main():
         out_image[:, :w] = image
         out_image[:, w:w * 2] = noise_image
         out_image[:, w * 2:] = denoised_image
-        cv2.imwrite("denoised.jpg", out_image)
+        #cv2.imwrite("denoised.jpg", out_image)
+        cv2.imwrite("denoised.jpg", denoised_image)        
         #img = cv2.imread(execution_path, "denoised.jpg")
         
         if args.output_dir:
@@ -74,14 +75,18 @@ def main():
             detector.setModelTypeAsRetinaNet()
             detector.setModelPath( os.path.join(execution_path , "resnet50_coco_best_v2.0.1.h5"))
             detector.loadModel()
-            detections = detector.detectObjectsFromImage(input_image=os.path.join(execution_path , "denoised.jpg"), output_image_path=os.path.join(execution_path , "imagenew.jpg"))
+            detections = detector.detectObjectsFromImage(input_image=os.path.join(execution_path , "denoised.jpg"), output_image_path=os.path.join(execution_path , "detectedImage.jpg"))
 
             for eachObject in detections:
                 print(eachObject["name"] , " : " , eachObject["percentage_probability"] )
             
-            img = cv2.imread(execution_path, cv2.IMREAD_COLOR)
-            cv2.imshow("result", img)
+            img = cv2.imread('detectedImage.jpg', cv2.IMREAD_UNCHANGED)
+            #resized_img = cv2.resize(img, (680, 680))
+            cv2.namedWindow("result", cv2.WINDOW_NORMAL)
+            cv2.resizeWindow("result", 680,680)
+            cv2.imshow('result', img)
             
+            print ("Press q if your works are done")
             key = cv2.waitKey(-1)
             # "q": quit
             if key == 113:
