@@ -6,6 +6,7 @@ from keras.callbacks import Callback
 from keras import backend as K
 import tensorflow as tf
 
+#기존 Noise2Noise모델에서 따온 코드입니다.
 
 class L0Loss:
     def __init__(self):
@@ -54,7 +55,7 @@ def get_model(model_name="srresnet"):
         raise ValueError("model_name should be 'srresnet'or 'unet'")
 
 
-# SRResNet
+# SRResNet에 관한 함수
 def get_srresnet_model(input_channel_num=3, feature_dim=64, resunit_num=16):
     def _residual_block(inputs):
         x = Conv2D(feature_dim, (3, 3), padding="same", kernel_initializer="he_normal")(inputs)
@@ -83,7 +84,7 @@ def get_srresnet_model(input_channel_num=3, feature_dim=64, resunit_num=16):
     return model
 
 
-# UNet: code from https://github.com/pietz/unet-keras
+# UNet에 관한 함수이다.
 def get_unet_model(input_channel_num=3, out_ch=3, start_ch=64, depth=4, inc_rate=2., activation='relu',
          dropout=0.5, batchnorm=False, maxpool=True, upconv=True, residual=False):
     def _conv_block(m, dim, acti, bn, res, do=0):
