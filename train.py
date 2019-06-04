@@ -23,7 +23,7 @@ class Schedule:
         return self.initial_lr * 0.125
 
 
-def get_args():
+def get_args(): #여러가지 인자를 받는 get_args() 함수 정의
     parser = argparse.ArgumentParser(description="train noise2noise model",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--image_dir", type=str, required=True,
@@ -59,7 +59,7 @@ def get_args():
     return args
 
 
-def main():
+def main(): #위의 함수로부터 받은 인자들을 토대로 여러 함수들을 호출하며 train
     args = get_args()
     image_dir = args.image_dir
     test_dir = args.test_dir
@@ -72,7 +72,7 @@ def main():
     output_path = Path(__file__).resolve().parent.joinpath(args.output_path)
     model = get_model(args.model)
 
-    if args.weight is not None:
+    if args.weight is not None: #weight파일이 존재하는 경우 로드
         model.load_weights(args.weight)
 
     opt = Adam(lr=lr)
@@ -87,8 +87,10 @@ def main():
     source_noise_model = get_noise_model(args.source_noise_model)
     target_noise_model = get_noise_model(args.target_noise_model)
     val_noise_model = get_noise_model(args.val_noise_model)
+    #generator.py 내의 NoisyImageGenerator함수를 호출하여 이미지를 노이즈화 함
     generator = NoisyImageGenerator(image_dir, source_noise_model, target_noise_model, batch_size=batch_size,
                                     image_size=image_size)
+    #ValGenerator함수를 통해 이미지를 수치화시킴
     val_generator = ValGenerator(test_dir, val_noise_model)
     output_path.mkdir(parents=True, exist_ok=True)
     callbacks.append(LearningRateScheduler(schedule=Schedule(nb_epochs, lr)))
@@ -105,6 +107,7 @@ def main():
                                verbose=1,
                                callbacks=callbacks)
 
+    #훈련 로그를 history.npz파일로 저장시킴
     np.savez(str(output_path.joinpath("history.npz")), history=hist.history)
 
 
